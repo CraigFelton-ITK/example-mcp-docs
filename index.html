@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfoTrack MCP - Model Context Protocol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* InfoTrack Brand Colors */
+            --teal-primary: #0097a7;
+            --teal-dark: #007d8a;
+            --teal-light: #00b4c7;
+            --navy-dark: #1a3a4a;
+            --navy-darker: #152d3a;
+            --orange-accent: #f5a623;
+            --orange-light: #ffb84d;
+            
+            /* Neutral Colors */
+            --white: #ffffff;
+            --gray-50: #f8f9fa;
+            --gray-100: #f1f3f5;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            
+            /* Semantic */
+            --text-primary: #1a3a4a;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --text-light: #ffffff;
+            --border-color: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-darker) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--orange-accent);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .hero h1 .highlight {
+            color: var(--teal-light);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--teal-primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--teal-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 151, 167, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Compatible With */
+        .compatible-section {
+            padding: 2rem 0 4rem;
+            background: linear-gradient(to bottom, var(--navy-darker), var(--navy-dark));
+        }
+
+        .compatible-label {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .compatible-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .compatible-logo {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            font-size: 1rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .compatible-logo:hover {
+            opacity: 1;
+        }
+
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section styling */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--teal-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.75rem;
+            padding: 0.4rem 1rem;
+            background: rgba(0, 151, 167, 0.1);
+            border-radius: 100px;
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--navy-dark);
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--navy-dark);
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--teal-primary);
+            box-shadow: 0 10px 40px rgba(0, 151, 167, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--teal-primary);
+            color: var(--white);
+        }
+
+        .card-icon.orange {
+            background: var(--orange-accent);
+        }
+
+        .card h3 {
+            margin-bottom: 0.75rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+            color: var(--text-muted);
+        }
+
+        /* Setup Section */
+        .setup-section {
+            background: var(--gray-50);
+        }
+
+        .setup-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        /* Steps */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1.25rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            background: var(--teal-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--white);
+        }
+
+        .step-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--navy-dark);
+        }
+
+        .step-content p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .step-content a {
+            color: var(--teal-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .step-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--navy-darker);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem 1.25rem;
+            background: var(--navy-dark);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f57; }
+        .code-dot.yellow { background: #febc2e; }
+        .code-dot.green { background: #28c840; }
+
+        .code-filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.4rem 0.875rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+        }
+
+        pre {
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            color: var(--white);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-key { color: #7dd3fc; }
+        .code-string { color: #a5d6ff; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0;
+            background: var(--gray-100);
+            padding: 0.25rem;
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .tab {
+            padding: 0.6rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab:hover {
+            color: var(--text-secondary);
+        }
+
+        .tab.active {
+            background: var(--white);
+            color: var(--teal-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Callout */
+        .callout {
+            display: flex;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--teal-primary);
+        }
+
+        .callout-icon {
+            font-size: 1.25rem;
+        }
+
+        .callout-content {
+            flex: 1;
+        }
+
+        .callout-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--navy-dark);
+        }
+
+        .callout-content p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        .callout.warning {
+            border-left-color: var(--orange-accent);
+        }
+
+        /* Tools table */
+        .tools-section {
+            background: var(--white);
+        }
+
+        .tools-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--navy-dark);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--gray-50);
+        }
+
+        td code {
+            background: rgba(0, 151, 167, 0.1);
+            color: var(--teal-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Examples Section */
+        .examples-section {
+            background: var(--gray-50);
+        }
+
+        .examples-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .example-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .example-header {
+            padding: 1.25rem 1.5rem;
+            background: var(--navy-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--white);
+        }
+
+        .example-icon {
+            font-size: 1.25rem;
+        }
+
+        .example-header h4 {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--white);
+        }
+
+        .example-body {
+            padding: 1.5rem;
+        }
+
+        .chat-bubble {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .chat-avatar.user {
+            background: var(--gray-200);
+        }
+
+        .chat-avatar.ai {
+            background: var(--teal-primary);
+            color: var(--white);
+        }
+
+        .chat-content {
+            flex: 1;
+        }
+
+        .chat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chat-message {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .chat-steps {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+
+        .chat-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-step-check {
+            color: var(--teal-primary);
+            font-weight: 700;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1rem;
+            color: var(--white);
+        }
+
+        .result-box h5 {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .result-box p {
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .result-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-box strong {
+            color: var(--white);
+        }
+
+        /* Inline code */
+        p code, li code {
+            background: rgba(0, 151, 167, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: var(--teal-primary);
+        }
+
+        /* Lists */
+        ul, ol {
+            color: var(--text-secondary);
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Feature Icons Row */
+        .features-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--teal-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .feature-item span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Process Timeline */
+        .timeline {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 0;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 32px;
+            left: 15%;
+            right: 15%;
+            height: 4px;
+            background: var(--teal-primary);
+            z-index: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--teal-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .timeline-content {
+            text-align: center;
+        }
+
+        .timeline-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--navy-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 3rem 1.5rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            .setup-content,
+            .examples-content {
+                padding: 3rem 1.5rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .timeline::before {
+                display: none;
+            }
+
+            .timeline {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .timeline-item {
+                max-width: none;
+            }
+        }
+
+        /* ========================================
+           PRINT STYLES - Optimized for PDF Export
+           ======================================== */
+        @media print {
+            /* Reset and base print settings */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+                color: #000;
+                background: white !important;
+            }
+
+            /* Hide interactive elements */
+            .copy-btn,
+            .tabs,
+            .hero-actions {
+                display: none !important;
+            }
+
+            /* ---- HERO SECTION: Convert to print-friendly ---- */
+            .hero {
+                background: white !important;
+                min-height: auto !important;
+                padding: 2rem 0 !important;
+                border-bottom: 3px solid #0097a7;
+            }
+
+            .hero::before {
+                display: none !important;
+            }
+
+            .hero-content {
+                padding: 1rem 0 !important;
+            }
+
+            .hero h1 {
+                color: #1a3a4a !important;
+                font-size: 28pt !important;
+            }
+
+            .hero h1 .highlight {
+                color: #0097a7 !important;
+            }
+
+            .hero-description {
+                color: #495057 !important;
+                font-size: 12pt !important;
+            }
+
+            .hero-badge {
+                background: #f1f3f5 !important;
+                border: 1px solid #dee2e6 !important;
+                color: #1a3a4a !important;
+            }
+
+            .hero-badge .dot {
+                background: #f5a623 !important;
+            }
+
+            /* ---- COMPATIBLE SECTION: Light background ---- */
+            .compatible-section {
+                background: #f8f9fa !important;
+                padding: 1rem 0 !important;
+            }
+
+            .compatible-label {
+                color: #6c757d !important;
+            }
+
+            .compatible-logo {
+                color: #495057 !important;
+            }
+
+            /* ---- SECTIONS: Consistent spacing ---- */
+            section {
+                padding: 1.5rem 0 !important;
+            }
+
+            .section-header {
+                margin-bottom: 1.5rem !important;
+            }
+
+            .section-label {
+                background: rgba(0, 151, 167, 0.1) !important;
+                color: #0097a7 !important;
+            }
+
+            h2 {
+                font-size: 18pt !important;
+                color: #1a3a4a !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            h3 {
+                font-size: 14pt !important;
+                color: #1a3a4a !important;
+            }
+
+            /* ---- CARDS: Prevent breaking inside ---- */
+            .card {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                border: 1px solid #dee2e6 !important;
+                box-shadow: none !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .cards-grid {
+                display: block !important;
+            }
+
+            .cards-grid .card {
+                display: inline-block !important;
+                width: 31% !important;
+                vertical-align: top !important;
+                margin-right: 2% !important;
+            }
+
+            .cards-grid .card:nth-child(3n) {
+                margin-right: 0 !important;
+            }
+
+            /* ---- SETUP SECTION ---- */
+            .setup-section {
+                background: white !important;
+                border-top: 1px solid #dee2e6 !important;
+            }
+
+            .setup-content {
+                padding: 1.5rem 0 !important;
+            }
+
+            /* Force page break before setup section */
+            #setup {
+                break-before: page !important;
+                page-break-before: always !important;
+            }
+
+            /* ---- STEPS: Keep together ---- */
+            .steps {
+                margin: 1rem 0 !important;
+            }
+
+            .step {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                margin-bottom: 0.75rem !important;
+                padding: 1rem !important;
+            }
+
+            .step-number {
+                background: #0097a7 !important;
+                color: white !important;
+            }
+
+            /* ---- TABS: Show ALL content (expand tabs for print) ---- */
+            .tab-content {
+                display: block !important;
+                margin-bottom: 1.5rem !important;
+                border: 1px solid #dee2e6 !important;
+                border-radius: 8px !important;
+                padding: 1rem !important;
+                background: #f8f9fa !important;
+            }
+
+            .tab-content::before {
+                content: attr(id) " configuration";
+                display: block;
+                font-weight: 700;
+                color: #0097a7;
+                text-transform: capitalize;
+                margin-bottom: 0.5rem;
+                font-size: 11pt;
+            }
+
+            /* ---- CODE BLOCKS: Print-friendly colors ---- */
+            .code-block {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                margin: 1rem 0 !important;
+            }
+
+            .code-header {
+                background: #e9ecef !important;
+                border-bottom: 1px solid #dee2e6 !important;
+                padding: 0.5rem 1rem !important;
+            }
+
+            .code-dots {
+                display: none !important;
+            }
+
+            .code-filename {
+                color: #495057 !important;
+                font-weight: 600 !important;
+            }
+
+            pre {
+                background: #f8f9fa !important;
+                color: #212529 !important;
+                padding: 1rem !important;
+                font-size: 9pt !important;
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+            }
+
+            .code-key {
+                color: #0097a7 !important;
+            }
+
+            .code-string {
+                color: #495057 !important;
+            }
+
+            /* ---- CALLOUTS: Keep together ---- */
+            .callout {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+            }
+
+            /* ---- TOOLS TABLE ---- */
+            #tools {
+                break-before: page !important;
+                page-break-before: always !important;
+            }
+
+            .tools-section {
+                background: white !important;
+            }
+
+            .tools-table-wrapper {
+                border: 1px solid #dee2e6 !important;
+            }
+
+            table {
+                font-size: 9pt !important;
+            }
+
+            th {
+                background: #f1f3f5 !important;
+                color: #1a3a4a !important;
+            }
+
+            td code {
+                background: #e9ecef !important;
+                color: #0097a7 !important;
+            }
+
+            tr:hover td {
+                background: transparent !important;
+            }
+
+            /* ---- EXAMPLES SECTION ---- */
+            #examples {
+                break-before: page !important;
+                page-break-before: always !important;
+            }
+
+            .examples-section {
+                background: white !important;
+            }
+
+            .examples-content {
+                padding: 1.5rem 0 !important;
+            }
+
+            /* ---- EXAMPLE CARDS: Keep together ---- */
+            .example-card {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                border: 1px solid #dee2e6 !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .example-header {
+                background: #1a3a4a !important;
+                color: white !important;
+                padding: 0.75rem 1rem !important;
+            }
+
+            .example-body {
+                padding: 1rem !important;
+            }
+
+            .chat-bubble {
+                margin-bottom: 1rem !important;
+            }
+
+            .chat-avatar.ai {
+                background: #0097a7 !important;
+            }
+
+            .chat-steps {
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+            }
+
+            .chat-step-check {
+                color: #0097a7 !important;
+            }
+
+            /* Result boxes - keep gradient or use solid color */
+            .result-box {
+                background: #0097a7 !important;
+                color: white !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            /* ---- LINKS: Show URLs in print ---- */
+            a[href^="http"]:after {
+                content: " (" attr(href) ")";
+                font-size: 8pt;
+                color: #6c757d;
+                font-weight: normal;
+            }
+
+            /* Don't show URL for internal links or buttons */
+            a[href^="#"]:after,
+            .btn:after {
+                content: none !important;
+            }
+
+            /* ---- PAGE MARGINS ---- */
+            @page {
+                margin: 0.75in;
+                size: letter;
+            }
+
+            @page :first {
+                margin-top: 0.5in;
+            }
+
+            /* ---- ORPHANS AND WIDOWS ---- */
+            p, li {
+                orphans: 3;
+                widows: 3;
+            }
+
+            h2, h3, h4 {
+                break-after: avoid !important;
+                page-break-after: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Model Context Protocol
+            </div>
+            <h1>AI Agents. Trusted Data.<br><span class="highlight">Zero Friction.</span></h1>
+            <p class="hero-description">
+                InfoTrack's MCP platform connects the human decision-maker and the AI agent with government services using one trusted digital language.
+            </p>
+            <div class="hero-actions">
+                <a href="#setup" class="btn btn-primary">
+                    Get Started
+                </a>
+                <a href="#examples" class="btn btn-secondary">
+                    View Examples
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="compatible-section">
+        <div class="compatible-label">Compatible with</div>
+        <div class="compatible-logos">
+            <span class="compatible-logo">Cursor</span>
+            <span class="compatible-logo">VS Code</span>
+            <span class="compatible-logo">Claude</span>
+            <span class="compatible-logo">ChatGPT</span>
+            <span class="compatible-logo">Copilot</span>
+        </div>
+    </section>
+
+    <main>
+        <!-- What You'll Need -->
+        <section>
+            <div class="section-header">
+                <div class="section-label">Requirements</div>
+                <h2>What You'll Need</h2>
+                <p style="max-width: 600px; margin: 0 auto;">Connect your MCP client to InfoTrack's secure gateway using OAuth 2.0 authentication.</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🔗</div>
+                    <h3>Server URL</h3>
+                    <p>Your dedicated InfoTrack MCP server endpoint, provided by your InfoTrack representative.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">🔑</div>
+                    <h3>Client Credentials</h3>
+                    <p>Generate a ClientId and ClientSecret from the InfoTrack Partners Portal.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔐</div>
+                    <h3>OAuth 2.0</h3>
+                    <p>MCP-supported Authorization Code flow handles authentication automatically via your MCP client.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Setup Section -->
+    <section class="setup-section" id="setup">
+        <div class="setup-content">
+            <div class="section-header">
+                <div class="section-label">Getting Started</div>
+                <h2>Connect to InfoTrack MCP</h2>
+            </div>
+
+            <h3>Getting Your Client Credentials</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Access the Partners Portal</h4>
+                        <p>Navigate to <a href="http://partners.infotrack.com/" target="_blank">partners.infotrack.com</a> and log in to your account.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Generate Client Credentials</h4>
+                        <p>Create a new application and generate your <strong>ClientId</strong> and <strong>ClientSecret</strong>. Keep these secure.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>OAuth 2.0 Authentication</h4>
+                        <p>Your MCP client will handle the OAuth 2.0 Authorization Code flow automatically, authenticating via <a href="http://auth.infotrack.com/" target="_blank">auth.infotrack.com</a>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout">
+                <div class="callout-icon">🔐</div>
+                <div class="callout-content">
+                    <strong>OAuth 2.0 Details</strong>
+                    <p>The MCP client handles the Authorization Code flow automatically. Token endpoint: <code>http://auth.infotrack.com/oauth/token</code> with scope <code>api</code>.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 3rem;">Configure Your MCP Client</h3>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="cursor">Cursor</button>
+                <button class="tab" data-tab="vscode">VS Code</button>
+                <button class="tab" data-tab="claude">Claude</button>
+                <button class="tab" data-tab="other">Other</button>
+            </div>
+
+            <div class="tab-content active" id="cursor">
+                <p style="margin-top: 1.5rem;">Add the following to your <code>~/.cursor/mcp.json</code> file:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-header-left">
+                            <div class="code-dots">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                            </div>
+                            <span class="code-filename">mcp.json</span>
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>{
+  <span class="code-key">"mcpServers"</span>: {
+    <span class="code-key">"infotrack"</span>: {
+      <span class="code-key">"type"</span>: <span class="code-string">"http"</span>,
+      <span class="code-key">"url"</span>: <span class="code-string">"&lt;your-server-url&gt;"</span>,
+      <span class="code-key">"authorization"</span>: {
+        <span class="code-key">"type"</span>: <span class="code-string">"oauth2"</span>,
+        <span class="code-key">"clientId"</span>: <span class="code-string">"&lt;your-client-id&gt;"</span>,
+        <span class="code-key">"clientSecret"</span>: <span class="code-string">"&lt;your-client-secret&gt;"</span>,
+        <span class="code-key">"tokenUrl"</span>: <span class="code-string">"http://auth.infotrack.com/oauth/token"</span>,
+        <span class="code-key">"scope"</span>: <span class="code-string">"api"</span>
+      }
+    }
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="tab-content" id="vscode">
+                <p style="margin-top: 1.5rem;">Add to your VS Code MCP settings:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-header-left">
+                            <div class="code-dots">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                            </div>
+                            <span class="code-filename">settings.json</span>
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>{
+  <span class="code-key">"servers"</span>: {
+    <span class="code-key">"infotrack"</span>: {
+      <span class="code-key">"type"</span>: <span class="code-string">"http"</span>,
+      <span class="code-key">"url"</span>: <span class="code-string">"&lt;your-server-url&gt;"</span>,
+      <span class="code-key">"authorization"</span>: {
+        <span class="code-key">"type"</span>: <span class="code-string">"oauth2"</span>,
+        <span class="code-key">"clientId"</span>: <span class="code-string">"&lt;your-client-id&gt;"</span>,
+        <span class="code-key">"clientSecret"</span>: <span class="code-string">"&lt;your-client-secret&gt;"</span>,
+        <span class="code-key">"tokenUrl"</span>: <span class="code-string">"http://auth.infotrack.com/oauth/token"</span>,
+        <span class="code-key">"scope"</span>: <span class="code-string">"api"</span>
+      }
+    }
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="tab-content" id="claude">
+                <p style="margin-top: 1.5rem;">Configure Claude Desktop with your InfoTrack MCP server:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-header-left">
+                            <div class="code-dots">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                            </div>
+                            <span class="code-filename">claude_desktop_config.json</span>
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>{
+  <span class="code-key">"mcpServers"</span>: {
+    <span class="code-key">"infotrack"</span>: {
+      <span class="code-key">"type"</span>: <span class="code-string">"http"</span>,
+      <span class="code-key">"url"</span>: <span class="code-string">"&lt;your-server-url&gt;"</span>,
+      <span class="code-key">"authorization"</span>: {
+        <span class="code-key">"type"</span>: <span class="code-string">"oauth2"</span>,
+        <span class="code-key">"clientId"</span>: <span class="code-string">"&lt;your-client-id&gt;"</span>,
+        <span class="code-key">"clientSecret"</span>: <span class="code-string">"&lt;your-client-secret&gt;"</span>,
+        <span class="code-key">"tokenUrl"</span>: <span class="code-string">"http://auth.infotrack.com/oauth/token"</span>,
+        <span class="code-key">"scope"</span>: <span class="code-string">"api"</span>
+      }
+    }
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="tab-content" id="other">
+                <p style="margin-top: 1.5rem;">For other MCP-compatible clients, use this standard OAuth 2.0 configuration:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-header-left">
+                            <div class="code-dots">
+                                <div class="code-dot red"></div>
+                                <div class="code-dot yellow"></div>
+                                <div class="code-dot green"></div>
+                            </div>
+                            <span class="code-filename">config.json</span>
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>{
+  <span class="code-key">"servers"</span>: {
+    <span class="code-key">"infotrack"</span>: {
+      <span class="code-key">"type"</span>: <span class="code-string">"http"</span>,
+      <span class="code-key">"url"</span>: <span class="code-string">"&lt;your-server-url&gt;"</span>,
+      <span class="code-key">"authorization"</span>: {
+        <span class="code-key">"type"</span>: <span class="code-string">"oauth2"</span>,
+        <span class="code-key">"clientId"</span>: <span class="code-string">"&lt;your-client-id&gt;"</span>,
+        <span class="code-key">"clientSecret"</span>: <span class="code-string">"&lt;your-client-secret&gt;"</span>,
+        <span class="code-key">"tokenUrl"</span>: <span class="code-string">"http://auth.infotrack.com/oauth/token"</span>,
+        <span class="code-key">"scope"</span>: <span class="code-string">"api"</span>
+      }
+    }
+  }
+}</code></pre>
+                </div>
+                <p style="margin-top: 1rem;">The MCP client will automatically handle the Authorization Code flow, prompting for user consent when needed.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools-section" id="tools">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 5rem 2rem;">
+            <div class="section-header">
+                <div class="section-label">How It Works</div>
+                <h2>Search & Invoke Pattern</h2>
+                <p style="max-width: 700px; margin: 0 auto;">InfoTrack MCP uses a dynamic tool discovery pattern. Instead of calling tools directly, you describe what you want to do and our gateway finds the appropriate tools for you.</p>
+            </div>
+
+            <div class="cards-grid" style="margin-bottom: 3rem;">
+                <div class="card">
+                    <div class="card-icon">🔍</div>
+                    <h3>search</h3>
+                    <p>Describe what you want to do in natural language. The gateway finds the appropriate tools and returns the JSON schema needed to execute them.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">⚡</div>
+                    <h3>invoke</h3>
+                    <p>Execute a discovered tool by passing the tool name and the data matching the returned schema. The gateway handles the execution.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1.5rem;">How the Pattern Works</h3>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Search for Tools</h4>
+                        <p>Call <code>search</code> with a natural language query describing your intent.</p>
+                        <div class="code-block" style="margin-top: 1rem;">
+                            <div class="code-header">
+                                <div class="code-header-left">
+                                    <div class="code-dots">
+                                        <div class="code-dot red"></div>
+                                        <div class="code-dot yellow"></div>
+                                        <div class="code-dot green"></div>
+                                    </div>
+                                    <span class="code-filename">Search Request</span>
+                                </div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre><code>{
+  <span class="code-key">"query"</span>: <span class="code-string">"I want to file documents into a court"</span>
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Receive Tool Schema</h4>
+                        <p>The gateway returns the discovered tool with its description and JSON schema.</p>
+                        <div class="code-block" style="margin-top: 1rem;">
+                            <div class="code-header">
+                                <div class="code-header-left">
+                                    <div class="code-dots">
+                                        <div class="code-dot red"></div>
+                                        <div class="code-dot yellow"></div>
+                                        <div class="code-dot green"></div>
+                                    </div>
+                                    <span class="code-filename">Search Response</span>
+                                </div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre><code>{
+  <span class="code-key">"tool"</span>: <span class="code-string">"start_filing"</span>,
+  <span class="code-key">"description"</span>: <span class="code-string">"Start a court filing with attached PDFs."</span>,
+  <span class="code-key">"schema"</span>: {
+    <span class="code-key">"type"</span>: <span class="code-string">"array"</span>,
+    <span class="code-key">"items"</span>: { <span class="code-key">"type"</span>: <span class="code-string">"string"</span>, <span class="code-key">"format"</span>: <span class="code-string">"uri"</span> }
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Invoke the Tool</h4>
+                        <p>Call <code>invoke</code> with the tool name and data matching the schema.</p>
+                        <div class="code-block" style="margin-top: 1rem;">
+                            <div class="code-header">
+                                <div class="code-header-left">
+                                    <div class="code-dots">
+                                        <div class="code-dot red"></div>
+                                        <div class="code-dot yellow"></div>
+                                        <div class="code-dot green"></div>
+                                    </div>
+                                    <span class="code-filename">Invoke Request</span>
+                                </div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre><code>{
+  <span class="code-key">"tool"</span>: <span class="code-string">"start_filing"</span>,
+  <span class="code-key">"data"</span>: [
+    <span class="code-string">"https://example.com/complaint.pdf"</span>,
+    <span class="code-string">"https://example.com/exhibit-a.pdf"</span>
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout" style="margin-top: 2rem;">
+                <div class="callout-icon">💡</div>
+                <div class="callout-content">
+                    <strong>Why Search & Invoke?</strong>
+                    <p>This pattern allows InfoTrack to continuously expand available services without requiring client updates. Your AI agent always has access to the latest tools through natural language discovery.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section class="examples-section" id="examples">
+        <div class="examples-content">
+            <div class="section-header">
+                <div class="section-label">In Action</div>
+                <h2>Example Usage</h2>
+                <p style="max-width: 600px; margin: 0 auto;">See how AI agents can intelligently interact with InfoTrack services.</p>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-icon">⚖️</span>
+                    <h4>Court Filing Example</h4>
+                </div>
+                <div class="example-body">
+                    <div class="chat-bubble">
+                        <div class="chat-avatar user">👤</div>
+                        <div class="chat-content">
+                            <div class="chat-label">You</div>
+                            <div class="chat-message">I need to file these documents into the Federal Court. Here are my PDFs.</div>
+                        </div>
+                    </div>
+                    <div class="chat-bubble">
+                        <div class="chat-avatar ai">✨</div>
+                        <div class="chat-content">
+                            <div class="chat-label">AI Agent</div>
+                            <div class="chat-message">I'll help you file documents into the Federal Court. Let me search for the appropriate filing tool.</div>
+                            <div class="chat-steps">
+                                <div class="chat-step"><span class="chat-step-check">✓</span> Called <code>search</code> with "file documents into court"</div>
+                                <div class="chat-step"><span class="chat-step-check">✓</span> Discovered tool: <code>start_filing</code></div>
+                                <div class="chat-step"><span class="chat-step-check">✓</span> Schema: array of PDF URLs</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block" style="margin: 1rem 0;">
+                        <div class="code-header">
+                            <div class="code-header-left">
+                                <div class="code-dots">
+                                    <div class="code-dot red"></div>
+                                    <div class="code-dot yellow"></div>
+                                    <div class="code-dot green"></div>
+                                </div>
+                                <span class="code-filename">Search Response</span>
+                            </div>
+                        </div>
+                        <pre><code>{
+  <span class="code-key">"tool"</span>: <span class="code-string">"start_filing"</span>,
+  <span class="code-key">"description"</span>: <span class="code-string">"Start a court filing with attached PDFs."</span>,
+  <span class="code-key">"schema"</span>: { <span class="code-key">"type"</span>: <span class="code-string">"array"</span>, <span class="code-key">"items"</span>: { <span class="code-key">"type"</span>: <span class="code-string">"string"</span> } }
+}</code></pre>
+                    </div>
+
+                    <div class="chat-bubble">
+                        <div class="chat-avatar ai">✨</div>
+                        <div class="chat-content">
+                            <div class="chat-label">AI Agent</div>
+                            <div class="chat-message">Found the filing tool. Now invoking it with your documents...</div>
+                            <div class="chat-steps">
+                                <div class="chat-step"><span class="chat-step-check">✓</span> Called <code>invoke</code> for <code>start_filing</code></div>
+                                <div class="chat-step"><span class="chat-step-check">✓</span> Submitted 2 PDF documents</div>
+                                <div class="chat-step"><span class="chat-step-check">✓</span> Filing initiated successfully</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 1rem 0;">
+                        <div class="code-header">
+                            <div class="code-header-left">
+                                <div class="code-dots">
+                                    <div class="code-dot red"></div>
+                                    <div class="code-dot yellow"></div>
+                                    <div class="code-dot green"></div>
+                                </div>
+                                <span class="code-filename">Invoke Request</span>
+                            </div>
+                        </div>
+                        <pre><code>{
+  <span class="code-key">"tool"</span>: <span class="code-string">"start_filing"</span>,
+  <span class="code-key">"data"</span>: [
+    <span class="code-string">"https://storage.example.com/complaint.pdf"</span>,
+    <span class="code-string">"https://storage.example.com/exhibit-a.pdf"</span>
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="result-box">
+                        <h5>Result</h5>
+                        <p>Your court filing has been initiated successfully.</p>
+                        <p><strong>Filing Reference:</strong> FED-2026-001234</p>
+                        <p><strong>Documents:</strong> 2 PDFs submitted</p>
+                        <p><strong>Status:</strong> Pending court acceptance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabGroup = tab.parentElement;
+                
+                // Remove active from all tabs in this group
+                tabGroup.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Hide all content, show selected
+                let sibling = tabGroup.nextElementSibling;
+                while (sibling && sibling.classList.contains('tab-content')) {
+                    sibling.classList.remove('active');
+                    if (sibling.id === tab.dataset.tab) {
+                        sibling.classList.add('active');
+                    }
+                    sibling = sibling.nextElementSibling;
+                }
+            });
+        });
+
+        // Copy code functionality
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const code = codeBlock.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
